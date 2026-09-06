@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<title>在籍在读学生信息核查</title>
+<link rel="stylesheet" href="assets/style.css?v=1.0.0">
+</head>
+<body>
+
+<div class="page">
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="logo">核</div>
+      <div class="topbar-text">
+        <h1 id="sysTitle">在籍在读学生信息核查</h1>
+        <p id="sysSub">潼南中学高中部</p>
+      </div>
+    </div>
+    <div class="topbar-meta" id="sysMeta"></div>
+  </header>
+
+  <main class="container">
+
+    <!-- 环境不支持提示 -->
+    <div class="alert alert-danger" id="insecureTip" hidden>
+      当前环境不支持安全加密模块。请通过 <b>https://</b> 开头的网址访问本页（GitHub Pages 默认满足）。
+    </div>
+
+    <!-- 核验入口 -->
+    <section id="gateView">
+      <div class="card">
+        <div class="card-head">
+          <h2>身份核验</h2>
+          <p class="sub">请输入本人身份证号码的<span class="hl">后 6 位</span>查验个人信息</p>
+        </div>
+
+        <div class="form-body">
+          <label class="field-label" for="tailInput">身份证号码后 6 位</label>
+          <div class="code-wrap">
+            <input id="tailInput" class="code-input" type="text"
+                   maxlength="6" autocomplete="off" autocapitalize="characters"
+                   autocorrect="off" spellcheck="false"
+                   placeholder="······" aria-label="身份证号码后六位">
+            <button type="button" class="code-clear" id="clearBtn" hidden aria-label="清空">×</button>
+          </div>
+          <p class="hint">末位为字母时请输入大写 <b>X</b>；如 <span class="mono">300537</span>、<span class="mono">27770X</span></p>
+
+          <div class="err" id="errBox" hidden></div>
+
+          <button class="btn btn-primary btn-block" id="verifyBtn">
+            <span class="btn-text">核 验 并 查 看</span>
+            <span class="spinner" hidden></span>
+          </button>
+
+          <div class="tries" id="triesBox" hidden></div>
+        </div>
+      </div>
+
+      <div class="notice">
+        <h3>使用说明</h3>
+        <ol>
+          <li>本页用于核对教导处登记的<b>在籍在读信息</b>是否与户口本一致。</li>
+          <li>核验成功后显示的信息<b>属于你本人</b>，请勿截图转发他人。</li>
+          <li>如发现信息有误，请使用页面底部的<b>「生成更正申请」</b>反馈给班主任。</li>
+          <li>本页面不会上传、不会保存你输入的任何内容。</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 结果视图 -->
+    <section id="resultView" hidden>
+      <div class="card result-card">
+        <div class="result-head">
+          <div class="avatar" id="resAvatar">同</div>
+          <div class="result-title">
+            <h2 id="resName">—</h2>
+            <p id="resClass">—</p>
+          </div>
+          <span class="badge badge-ok" id="resStatus">—</span>
+        </div>
+
+        <div class="toolbar">
+          <button class="btn btn-ghost btn-sm" id="toggleMaskBtn">显示完整号码</button>
+          <button class="btn btn-ghost btn-sm" id="lockBtn">锁定退出</button>
+        </div>
+
+        <div id="groups"></div>
+      </div>
+
+      <div class="card action-card">
+        <h3>核对结果反馈</h3>
+        <p class="sub">核对完成后请选择一项。如需更正，生成的申请可直接复制发送。</p>
+        <div class="action-row">
+          <button class="btn btn-success" id="okBtn">信息核对无误</button>
+          <button class="btn btn-outline" id="fixBtn">信息有误 · 生成更正申请</button>
+        </div>
+        <div class="confirm-note" id="confirmNote" hidden></div>
+      </div>
+
+      <div class="notice notice-warn">
+        <b>隐私提醒：</b>查询到的信息包含本人及监护人身份信息，请在确认四周无人后再查看，
+        查看完毕请点击「锁定退出」。离开页面 5 分钟后系统会自动锁定。
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="foot">
+    <p>本系统数据经加密存储，页面源码中不含任何明文个人信息。</p>
+    <p id="footMeta"></p>
+  </footer>
+
+</div>
+
+<!-- 更正申请弹窗 -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-mask" data-close></div>
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>信息更正申请</h3>
+      <button class="modal-x" data-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="sub">请修改下方内容，只保留需要更正的项目，然后复制发送给班主任。</p>
+      <textarea id="fixText" rows="12" spellcheck="false"></textarea>
+      <div class="modal-foot">
+        <button class="btn btn-outline btn-sm" data-close>关 闭</button>
+        <button class="btn btn-primary btn-sm" id="copyBtn">复制内容</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="assets/pepper.js?v=1.0.0"></script>
+<script src="assets/data.js?v=20260906141124"></script>
+<script src="assets/app.js?v=1.0.0"></script>
+</body>
+</html>

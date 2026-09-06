@@ -1,0 +1,6 @@
+# 自检口令缓存（含明文测试口令，严禁上传）
+tools/.test_tails.json
+
+# 系统文件
+Thumbs.db
+.DS_Store
